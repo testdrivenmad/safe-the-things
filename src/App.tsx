@@ -1,8 +1,9 @@
-import { ListItem, Stack, TextField } from "@mui/material";
+import { ListItem, ListItemButton, Stack, TextField } from "@mui/material";
 import Paper from "@mui/material/Paper";
 import rawObj from "./db/safe-stores.json";
 import { FixedSizeList, ListChildComponentProps } from "react-window";
 import React from "react";
+import BusinessDetails from "./BusinessDetails";
 
 const storeDb = new Map();
 const storeNameCache: string[] = [];
@@ -19,16 +20,19 @@ Object.entries(rawObj).forEach(([name, metadata]) => {
   }
 });
 
-const rowRenderer = (props: ListChildComponentProps) => {
-  const name = props.data[props.index];
-  return (
-    <ListItem key={name} style={props.style}>
-      {name}
-    </ListItem>
-  );
+const rowRendererRenderer = (setOpen: (open: boolean) => void) => {
+  return (props: ListChildComponentProps) => {
+    const name = props.data[props.index];
+    return (
+      <ListItem key={name} style={props.style}>
+        <ListItemButton onClick={() => setOpen(true)}>{name}</ListItemButton>
+      </ListItem>
+    );
+  };
 };
 function App() {
   const [filteredStores, setFilteredStores] = React.useState(storeNameCache);
+  const [dialogOpen, setDialogOpen] = React.useState(false);
 
   return (
     <Paper sx={{ width: "100%", height: "600px" }} elevation={8}>
@@ -60,9 +64,10 @@ function App() {
           width={"100%"}
           overscanCount={30}
         >
-          {rowRenderer}
+          {rowRendererRenderer(setDialogOpen)}
         </FixedSizeList>
       </Stack>
+      <BusinessDetails open={dialogOpen} setOpen={setDialogOpen} />
     </Paper>
   );
 }
