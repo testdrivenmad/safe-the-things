@@ -38,7 +38,7 @@ function App() {
             if (event.target.value === undefined)
               setFilteredStores(storeNameCache);
             else {
-              const searchTerm = event.target.value.trim();
+              const searchTerm = event.target.value.trim().toLowerCase();
 
               const newFilteredStores = new Set<string>();
               keywordToStoreNameCache.forEach((businesses, keyword) => {
